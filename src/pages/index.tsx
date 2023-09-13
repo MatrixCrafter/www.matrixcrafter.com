@@ -25,7 +25,7 @@ const Index = () => {
 
   return (
     <Layout>
-      <SEO title="About" />
+      <SEO title="Home" />
       <Container
         dangerouslySetInnerHTML={{ __html: markdown ?? "" }}
         rhythm={rhythm}
