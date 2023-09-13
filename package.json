@@ -24,7 +24,6 @@
   "dependencies": {
     "dark-github-theme": "https://github.com/remorses/dark-github-theme",
     "gatsby": "^5.12.4",
-    "gatsby-plugin-feed": "^5.12.0",
     "gatsby-plugin-image": "^3.12.0",
     "gatsby-plugin-manifest": "^5.12.0",
     "gatsby-plugin-offline": "^6.12.0",
