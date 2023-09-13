@@ -17,12 +17,12 @@
 
 /** @type {MetaConfig} */
 const metaConfig = {
-  title: "Dev Ed",
-  description: `Ed's Blog`,
-  author: "Ed",
-  siteUrl: "https://gatsby-starter-apple.netlify.app",
+  title: "MatrixCrafter",
+  description: `MatrixCrafter Website`,
+  author: "Philippe VIENNE",
+  siteUrl: "https://www.matrixcrafter.com",
   lang: "en",
-  utterances: "sungik-choi/gatsby-starter-apple-comment",
+  utterances: "matrixcrafter/www.matrixcrafter.com",
   links: {
     github: "https://github.com/sungik-choi/gatsby-starter-apple",
   },
