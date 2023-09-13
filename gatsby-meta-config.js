@@ -19,7 +19,7 @@
 const metaConfig = {
   title: "MatrixCrafter",
   description: `MatrixCrafter Website`,
-  author: "Philippe VIENNE",
+  author: "MatrixCrafter",
   siteUrl: "https://www.matrixcrafter.com",
   lang: "en",
   utterances: "matrixcrafter/www.matrixcrafter.com",

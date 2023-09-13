@@ -1,136 +1,98 @@
-import React, { useLayoutEffect, useState } from "react"
+import React from "react"
 
-import type { PageProps } from "gatsby"
-import { graphql } from "gatsby"
+import { graphql, useStaticQuery } from "gatsby"
 import styled from "styled-components"
 
-import CategoryFilter from "~/src/components/catetgoryFilter"
-import PostGrid from "~/src/components/postGrid"
 import SEO from "~/src/components/seo"
-import useSiteMetadata from "~/src/hooks/useSiteMetadata"
 import Layout from "~/src/layouts/layout"
-import type Post from "~/src/types/Post"
+import Markdown from "~/src/styles/markdown"
+import { rhythm } from "~/src/styles/typography"
 
-const Home = ({
-  pageContext,
-  data,
-}: PageProps<Queries.Query, Queries.MarkdownRemarkFrontmatter>) => {
-  const [posts, setPosts] = useState<Post[]>([])
-  const currentCategory = pageContext.category
-  const postData = data.allMarkdownRemark.edges
-
-  useLayoutEffect(() => {
-    const filteredPostData = currentCategory
-      ? postData.filter(
-          ({ node }) => node?.frontmatter?.category === currentCategory
-        )
-      : postData
-
-    filteredPostData.forEach(({ node }) => {
-      const { id } = node
-      const { slug } = node.fields!
-      const { title, desc, date, category, thumbnail, alt } = node.frontmatter!
-      const { childImageSharp } = thumbnail!
-
-      setPosts(prevPost => [
-        ...prevPost,
-        {
-          id,
-          slug,
-          title,
-          desc,
-          date,
-          category,
-          thumbnail: childImageSharp?.id,
-          alt,
-        },
-      ])
-    })
-  }, [currentCategory, postData])
-
-  const site = useSiteMetadata()
-  const postTitle = currentCategory || site.postTitle
-
-  return (
-    <Layout>
-      <SEO title="Home" />
-      <Main>
-        <Content>
-          <CategoryFilter categoryList={data.allMarkdownRemark.group} />
-          <PostTitle>{postTitle}</PostTitle>
-          <PostGrid posts={posts} />
-        </Content>
-      </Main>
-    </Layout>
-  )
-}
-
-const Main = styled.main`
-  min-width: var(--min-width);
-  min-height: calc(100vh - var(--nav-height) - var(--footer-height));
-  background-color: var(--color-background);
-`
-
-const Content = styled.div`
-  box-sizing: content-box;
-  width: 87.5%;
-  max-width: var(--width);
-  padding-top: var(--sizing-lg);
-  padding-bottom: var(--sizing-lg);
-  margin: 0 auto;
-
-  @media (max-width: ${({ theme }) => theme.device.sm}) {
-    padding-top: var(--grid-gap-lg);
-    width: 87.5%;
-  }
-`
-
-const PostTitle = styled.h2`
-  font-size: 2rem;
-  font-weight: var(--font-weight-extra-bold);
-  margin-bottom: var(--sizing-md);
-  line-height: 1.21875;
-
-  @media (max-width: ${({ theme }) => theme.device.sm}) {
-    font-size: 1.75rem;
-  }
-`
-
-export const query = graphql`
-  query Home {
-    allMarkdownRemark(
-      filter: { fileAbsolutePath: { regex: "/(posts/blog)/" } }
-      limit: 2000
-      sort: { frontmatter: { date: DESC } }
-    ) {
-      group(field: { frontmatter: { category: SELECT } }) {
-        fieldValue
-        totalCount
-      }
-      totalCount
-      edges {
-        node {
-          id
-          frontmatter {
-            title
-            category
-            date(formatString: "YYYY-MM-DD")
-            desc
-            thumbnail {
-              childImageSharp {
-                id
-              }
-              base
-            }
-            alt
-          }
-          fields {
-            slug
+const Index = () => {
+  const data = useStaticQuery<Queries.Query>(graphql`
+    query About {
+      allMarkdownRemark(filter: { fileAbsolutePath: { regex: "/index/" } }) {
+        edges {
+          node {
+            html
           }
         }
       }
     }
+  `)
+
+  const markdown = data.allMarkdownRemark?.edges[0].node.html
+
+  return (
+    <Layout>
+      <SEO title="About" />
+      <Container
+        dangerouslySetInnerHTML={{ __html: markdown ?? "" }}
+        rhythm={rhythm}
+      ></Container>
+      <CTA>
+        <ContactUs href="https://app.reclaim.ai/m/matrixcrafter/quick-meeting">Contact Us</ContactUs>
+      </CTA>
+    </Layout>
+  )
+}
+
+const ContactUs = styled.a`
+  display: inline-block;
+  margin-top: 2rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-floating-button-border);
+  border-radius: 0.25rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  background-color: var(--color-floating-button);
+  color: var(--color-floating-button-text);
+
+  &:hover {
+    background-color: var(--color-floating-button-hover);
+    color: var(--color-floating-button-text-hover);
+    border-color: var(--color-floating-button-border-hover);
   }
 `
 
-export default Home
+const CTA = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+`
+
+const Container = styled(Markdown).attrs({
+  as: "main",
+})`
+  width: var(--post-width);
+  margin: 0 auto;
+  margin-top: 80px;
+  margin-bottom: 1rem;
+
+  @media (max-width: ${({ theme }) => theme.device.sm}) {
+    margin-top: var(--sizing-xl);
+    width: 87.5%;
+  }
+
+  h1 {
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    margin-top: var(--sizing-lg);
+
+    @media (max-width: ${({ theme }) => theme.device.sm}) {
+      font-size: 1.75rem;
+    }
+  }
+
+  h3 {
+    @media (max-width: ${({ theme }) => theme.device.sm}) {
+      font-size: 1.25rem;
+    }
+  }
+`
+
+export default Index

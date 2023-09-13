@@ -18,6 +18,8 @@ import ThemeToggleButton from "./themeToggleButton"
 import useMenu from "./useMenu"
 import type { UseMenuReturnType } from "./useMenu"
 
+import logo from "../../images/logo-black.png";
+
 interface NavBarProps {
   title?: string | null
   themeToggler: UseThemeReturnType["themeToggler"]
@@ -42,9 +44,11 @@ const NavBar: React.FC<NavBarProps> = ({ title, themeToggler }) => {
       <NavBackground toggle={toggle} />
       <Content>
         <Title onClick={() => setToggle(false)}>
-          <Link to="/">{title}</Link>
+          <Link to="/">
+            <Logo src={logo} alt="logo" />
+          </Link>
         </Title>
-        <LinkWrap>
+        {/* <LinkWrap>
           <Curtain ref={curtainRef} toggle={toggle} />
           <LinkContent>
             <MenuIcon toggle={toggle} handleClick={handleClick} />
@@ -55,13 +59,17 @@ const NavBar: React.FC<NavBarProps> = ({ title, themeToggler }) => {
               </li>
             </LinkUl>
           </LinkContent>
-        </LinkWrap>
+        </LinkWrap> */}
       </Content>
     </Nav>
   )
 }
 
 type Toggleable = Pick<UseMenuReturnType, "toggle">
+
+const Logo = styled.img`
+  height: calc(var(--nav-height) * 0.7);
+`
 
 const Nav = styled.nav`
   min-width: var(--min-width);
